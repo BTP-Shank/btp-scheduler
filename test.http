@@ -1,0 +1,9 @@
+
+### action call
+
+POST http://localhost:4004/odata/v4/catalog/refreshDB
+Content-Type: application/json
+
+{
+    "user" : "Shashank"
+}

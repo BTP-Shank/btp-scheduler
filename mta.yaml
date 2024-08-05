@@ -1,0 +1,68 @@
+_schema-version: '3.1'
+ID: btp-scheduler
+version: 1.0.0
+description: "A simple CAP project."
+parameters:
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npm i
+        - npx cds build --production
+modules:
+  - name: btp-scheduler-srv
+    type: nodejs
+    path: gen/srv
+    parameters:
+      buildpack: nodejs_buildpack
+      readiness-health-check-type: http
+      readiness-health-check-http-endpoint: /health
+    build-parameters:
+      builder: npm
+    provides:
+      - name: srv-api # required by consumers of CAP services (e.g. approuter)
+        properties:
+          srv-url: ${default-url}
+    requires:
+      - name: btp-scheduler-destination
+      - name: btp-scheduler-db
+      - name: btp-scheduler-auth
+      - name: btp-scheduler-sch
+
+  - name: btp-scheduler-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpack: nodejs_buildpack
+    requires:
+      - name: btp-scheduler-db
+
+resources:
+  - name: btp-scheduler-destination
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-plan: lite
+  - name: btp-scheduler-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared
+  - name: btp-scheduler-auth
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+      config:
+        xsappname: btp-scheduler-${org}-${space}
+        tenant-mode: dedicated
+  - name: btp-scheduler-sch
+    type: org.cloudfoundry.managed-service
+    parameters:
+      config:
+        enable-xsuaa-support : true
+      service: jobscheduler
+      service-name: JobScheduling 
+      service-plan: lite
