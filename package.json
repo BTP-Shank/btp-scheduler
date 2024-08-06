@@ -22,7 +22,8 @@
   },
   "scripts": {
     "start": "cds-serve",
-    "deploy" : "cf deploy mta_archives/btp-scheduler_1.0.0.mtar"
+    "deploy" : "cf deploy mta_archives/btp-scheduler_1.0.0.mtar",
+    "undeploy" : "cf undeploy btp-scheduler --delete-services --delete-service-keys --delete-service-brokers"
   },
   "cds": {
     "requires": {
@@ -34,7 +35,7 @@
         }
       },
       "db": "hana",
-      "auth": "xsuaa"
+      "auth": "dummy"
     }
   }
 }

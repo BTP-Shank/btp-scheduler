@@ -35,7 +35,7 @@ class CatalogService extends cds.ApplicationService {
                 service: 'gmail',
                 auth: {
                     user: 'shashank968246@gmail.com',
-                    pass: 'tqxz nxis uxkj iarw'
+                    pass: 'xrrm lmxq xoyz yryq'
                 }
             });
 
@@ -55,6 +55,10 @@ class CatalogService extends cds.ApplicationService {
                     console.log('✅ Email sent:', info.response);
                 }
             });
+
+        return {
+            "message" : "Refresh successful by user" + req.data.user
+        };
 
         });
 

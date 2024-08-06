@@ -29,6 +29,7 @@ modules:
       - name: btp-scheduler-db
       - name: btp-scheduler-auth
       - name: btp-scheduler-sch
+      - name: btp-scheduler-logging
 
   - name: btp-scheduler-db-deployer
     type: hdb
@@ -62,7 +63,12 @@ resources:
     type: org.cloudfoundry.managed-service
     parameters:
       config:
-        enable-xsuaa-support : true
+        enable-xsuaa-support: true
       service: jobscheduler
-      service-name: JobScheduling 
+      service-name: JobScheduling
+      service-plan: lite
+  - name: btp-scheduler-logging
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: application-logs
       service-plan: lite
